@@ -1,5 +1,3 @@
-package texteditor;
-
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,25 +24,29 @@ public class TextEditor extends JFrame{
 	//Name that user wishes to save file as
 	String filename = null;
 	
+	//Editor constructor
 	public TextEditor() {
 		
-		add(panel);
+		//builds JPanel and adds to JFrame
 		setTitle("Text Editor");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		panel.setLayout(new BorderLayout());
 		panel.add(text, BorderLayout.SOUTH);
 		add(panel);
 		
+		//Builds save menu
 		menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		menu= new JMenu("Save");
 		menuBar.add(menu);
 		
+		//Adds 'save' option
 		save = new JMenuItem("Save");
 		menu.add(save);
 		save.setActionCommand("save");
 		save.addActionListener(new SaveListener());
 		
+		//Adds 'save as' option
 		saveAs = new JMenuItem("Save As");
 		menu.add(saveAs);
 		saveAs.setActionCommand("saveAs");
@@ -55,9 +57,12 @@ public class TextEditor extends JFrame{
 		
 	}
 	
+	//Responds to clicks on save menu
 	private class SaveListener implements ActionListener {
 		
 		public void actionPerformed(ActionEvent e) {
+			
+			//Checks if a file has been created, then writes current text to file if so
 			if (e.getActionCommand().equals("save")) {
 				if (filename == null)
 					filename = JOptionPane.showInputDialog("What would you like to name the file?");
@@ -72,6 +77,8 @@ public class TextEditor extends JFrame{
 					e1.printStackTrace();
 				}
 			}
+			
+			//Allows the user to create and name a file then save current text to it
 			if (e.getActionCommand().equals("saveAs")) {
 				filename = JOptionPane.showInputDialog("What would you like to name the file?");
 				File file = new File("C:\\Users\\Allen\\Desktop\\" + filename + ".txt");
@@ -88,6 +95,7 @@ public class TextEditor extends JFrame{
 		}
 	}
 	
+	//Main method that instantiates the editor
 	public static void main(String[] args) {
 		new TextEditor();
 	}
