@@ -4,9 +4,6 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import javax.swing.*;
 
-//TODO: add undo feature
-//TODO: Glam up UI
-
 public class TextEditor extends JFrame{
 
 	//Text window declarations
