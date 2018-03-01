@@ -6,22 +6,24 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import javax.swing.*;
 
-//TODO: commit onto GitHub, 
 //TODO: add undo feature
-//TODO: Glam up dat UI
+//TODO: Glam up UI
 
 public class TextEditor extends JFrame{
 
+	//Text window declarations
 	private static final long serialVersionUID = 1L;
 	JFrame window = new JFrame();
 	JTextArea text = new JTextArea(25, 40);
 	private JPanel panel = new JPanel();
 	
+	//Save menu declarations
 	JMenuBar menuBar;
 	JMenu menu;
 	JMenuItem save;
 	JMenuItem saveAs;
 	
+	//Name that user wishes to save file as
 	String filename = null;
 	
 	public TextEditor() {
@@ -29,7 +31,8 @@ public class TextEditor extends JFrame{
 		add(panel);
 		setTitle("Text Editor");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		buildPanel();
+		panel.setLayout(new BorderLayout());
+		panel.add(text, BorderLayout.SOUTH);
 		add(panel);
 		
 		menuBar = new JMenuBar();
@@ -46,17 +49,10 @@ public class TextEditor extends JFrame{
 		menu.add(saveAs);
 		saveAs.setActionCommand("saveAs");
 		saveAs.addActionListener(new SaveListener());
-		
-		
-		
+	
 		pack();
 		setVisible(true);
 		
-	}
-	
-	public void buildPanel() {
-		panel.setLayout(new BorderLayout());
-		panel.add(text, BorderLayout.SOUTH);
 	}
 	
 	private class SaveListener implements ActionListener {
