@@ -191,3 +191,4 @@ public class TextEditor extends JFrame{
 		new TextEditor();
 	}
 
+}
