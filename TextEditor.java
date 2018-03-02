@@ -154,13 +154,15 @@ public class TextEditor extends JFrame{
 	//Searches text for user inputted string and highlights if found
 	public void searchText(String searchString) {
 		
-		String textString = text.getText();
-		int index = textString.indexOf(searchString);
-		if (index == -1)
-			JOptionPane.showMessageDialog(null, "String not found in text.");
-		else {
-			text.requestFocus();
-			text.select(index, index + searchString.length());
+		if (searchString != null) {
+			String textString = text.getText();
+			int index = textString.indexOf(searchString);
+			if (index == -1)
+				JOptionPane.showMessageDialog(null, "String not found in text.");
+			else {
+				text.requestFocus();
+				text.select(index, index + searchString.length());
+			}
 		}
 	}
 	
