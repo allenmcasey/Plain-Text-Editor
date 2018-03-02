@@ -26,6 +26,7 @@ public class TextEditor extends JFrame{
 		//builds JPanel and adds to JFrame
 		setTitle("Text Editor");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		text.setLineWrap(true);
 		panel.add(text);
 		add(panel);
 		
