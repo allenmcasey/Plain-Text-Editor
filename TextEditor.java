@@ -13,9 +13,11 @@ public class TextEditor extends JFrame{
 	
 	//Save menu declarations
 	JMenuBar menuBar;
-	JMenu menu;
+	JMenu fileMenu;
+	JMenu editMenu;
 	JMenuItem save;
 	JMenuItem saveAs;
+	JMenuItem find;
 	
 	//Name that user wishes to save file as
 	String filename = null;
@@ -33,26 +35,37 @@ public class TextEditor extends JFrame{
 		//Builds save menu
 		menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
-		menu= new JMenu("File");
-		menuBar.add(menu);
+		fileMenu = new JMenu("File");
+		menuBar.add(fileMenu);
+		
+		//Builds the edit menu
+		editMenu = new JMenu("Edit");
+		menuBar.add(editMenu);
 		
 		//Adds 'save' option
 		save = new JMenuItem("Save");
-		menu.add(save);
+		fileMenu.add(save);
 		save.setActionCommand("save");
 		save.addActionListener(new SaveListener());
 		
 		//Adds 'save as' option
 		saveAs = new JMenuItem("Save As");
-		menu.add(saveAs);
+		fileMenu.add(saveAs);
 		saveAs.setActionCommand("saveAs");
 		saveAs.addActionListener(new SaveListener());
 		
 		//Adds 'open' option
 		save = new JMenuItem("Open");
-		menu.add(save);
+		fileMenu.add(save);
 		save.setActionCommand("open");
 		save.addActionListener(new SaveListener());
+		
+		//Adds 'find' option
+		find = new JMenuItem("Find");
+		editMenu.add(find);
+		find.setActionCommand("find");
+		find.addActionListener(new SaveListener());
+		
 	
 		pack();
 		setVisible(true);
@@ -91,10 +104,16 @@ public class TextEditor extends JFrame{
 			if (e.getActionCommand().equals("open")) {
 				openFile();
 			}
+			
+			//Allows user to enter a string then uses searchText() to highlight it
+			if (e.getActionCommand().equals("find")) {
+				String searchString = JOptionPane.showInputDialog("What would you like to search for?");
+				searchText(searchString);
+			}
 		}
 	}
 	
-	//Method that saves current text field to file
+	//Method that allows user to save current text
 	public void saveFile() throws IOException {
 		JFileChooser fileChooser = new JFileChooser();
 		int result = fileChooser.showSaveDialog(TextEditor.this);
@@ -105,7 +124,7 @@ public class TextEditor extends JFrame{
 		}
 	}
 	
-	//Method that allows the user to choose to open an existing file in the editor
+	//Method that allows user to open a file
 	public void openFile() {
 		JFileChooser fc = new JFileChooser();
 		StringBuffer buffer = new StringBuffer();
@@ -132,11 +151,24 @@ public class TextEditor extends JFrame{
 		}
 	}
 	
+	//Searches text for user inputted string and highlights if found
+	public void searchText(String searchString) {
+		
+		String textString = text.getText();
+		int index = textString.indexOf(searchString);
+		if (index == -1)
+			JOptionPane.showMessageDialog(null, "String not found in text.");
+		else {
+			text.requestFocus();
+			text.select(index, index + searchString.length());
+		}
+	}
+	
 	//Main method that instantiates the editor
 	public static void main(String[] args) {
 		
-		// Set System L&F
 		try {
+            		// Set System L&F
 			UIManager.setLookAndFeel(
 					UIManager.getSystemLookAndFeelClassName());
 			
@@ -156,4 +188,4 @@ public class TextEditor extends JFrame{
 		
 		new TextEditor();
 	}
-}
+
