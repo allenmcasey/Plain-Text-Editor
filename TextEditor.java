@@ -8,7 +8,7 @@ public class TextEditor extends JFrame{
 	//Text window declarations
 	private static final long serialVersionUID = 1L;
 	JFrame window = new JFrame();
-	JTextArea text = new JTextArea(25, 40);
+	JTextArea text = new JTextArea(20, 50);
 	private JPanel panel = new JPanel();
 	
 	//Save menu declarations
@@ -66,15 +66,25 @@ public class TextEditor extends JFrame{
 			
 			//Checks if a file has been created, then writes current text to file if so
 			if (e.getActionCommand().equals("save")) {
-				if (filename == null)
-					filename = JOptionPane.showInputDialog("What would you like to name the file?");
-				saveFile(filename);
+				//if (filename == null)
+				//	filename = JOptionPane.showInputDialog("What would you like to name the file?");
+				try {
+					saveFile();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 			
 			//Allows the user to create and name a file then save current text to it
 			if (e.getActionCommand().equals("saveAs")) {
-				filename = JOptionPane.showInputDialog("What would you like to name the file?");
-				saveFile(filename);
+				//filename = JOptionPane.showInputDialog("What would you like to name the file?");
+				try {
+					saveFile();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 			
 			//Allows user to open and edit existing .txt files
@@ -84,21 +94,18 @@ public class TextEditor extends JFrame{
 		}
 	}
 	
-	//Method that saves the file
-	public void saveFile(String filename) {
-		File file = new File("C:\\Users\\Allen\\Desktop\\" + filename + ".txt");
-		FileWriter fileWriter;
-		try {
-			fileWriter = new FileWriter(file);
-			PrintWriter printWriter = new PrintWriter(fileWriter);
-			printWriter.print(text.getText());
-			printWriter.close();
-		} catch (IOException e1) {
-			e1.printStackTrace();
+	//Method that saves current text field to file
+	public void saveFile() throws IOException {
+		JFileChooser fileChooser = new JFileChooser();
+		int result = fileChooser.showSaveDialog(TextEditor.this);
+		if (result == JFileChooser.APPROVE_OPTION) {
+		  File file = fileChooser.getSelectedFile();
+		  FileWriter writer = new FileWriter(file);
+		  text.write(writer);
 		}
 	}
 	
-	//method that opens a selected file
+	//Method that allows the user to choose to open an existing file in the editor
 	public void openFile() {
 		JFileChooser fc = new JFileChooser();
 		StringBuffer buffer = new StringBuffer();
@@ -127,7 +134,26 @@ public class TextEditor extends JFrame{
 	
 	//Main method that instantiates the editor
 	public static void main(String[] args) {
+		
+		// Set System L&F
+		try {
+			UIManager.setLookAndFeel(
+					UIManager.getSystemLookAndFeelClassName());
+			
+    		} 
+		catch (UnsupportedLookAndFeelException e) {
+		       // handle exception
+		    }
+		    catch (ClassNotFoundException e) {
+		       // handle exception
+		    }
+		    catch (InstantiationException e) {
+		       // handle exception
+		    }
+		    catch (IllegalAccessException e) {
+		       // handle exception
+		    }
+		
 		new TextEditor();
 	}
-
 }
