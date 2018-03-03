@@ -19,6 +19,7 @@ public class TextEditor extends JFrame{
 	JMenuItem saveAs;
 	JMenuItem find;
 	JMenuItem replace;
+	JMenuItem selectAll;
 	
 	//Editor constructor
 	public TextEditor() {
@@ -69,6 +70,12 @@ public class TextEditor extends JFrame{
 		editMenu.add(replace);
 		replace.setActionCommand("replace");
 		replace.addActionListener(new SaveListener());
+		
+		//Adds 'select all' option
+		selectAll = new JMenuItem("Select All");
+		editMenu.add(selectAll);
+		selectAll.setActionCommand("selectAll");
+		selectAll.addActionListener(new SaveListener());
 	
 		pack();
 		setVisible(true);
@@ -114,6 +121,12 @@ public class TextEditor extends JFrame{
 			//Allows user to replace string with another string
 			if (e.getActionCommand().equals("replace")) {
 				replace();
+			}
+			
+			//Selects all text in editor
+			if (e.getActionCommand().equals("selectAll")) {
+				text.requestFocus();
+				text.select(0, text.getText().length());
 			}
 		}
 	}
