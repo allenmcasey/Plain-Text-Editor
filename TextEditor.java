@@ -15,11 +15,16 @@ public class TextEditor extends JFrame{
 	JMenuBar menuBar;
 	JMenu fileMenu;
 	JMenu editMenu;
+	JMenu formatMenu;
+	JMenu fontMenu;
 	JMenuItem save;
 	JMenuItem saveAs;
 	JMenuItem find;
 	JMenuItem replace;
 	JMenuItem selectAll;
+	JMenuItem size12;
+	JMenuItem size14;
+	JMenuItem size16;
 	
 	//Editor constructor
 	public TextEditor() {
@@ -34,12 +39,17 @@ public class TextEditor extends JFrame{
 		//Builds save menu
 		menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
+		
 		fileMenu = new JMenu("File");
 		menuBar.add(fileMenu);
 		
 		//Builds the edit menu
 		editMenu = new JMenu("Edit");
 		menuBar.add(editMenu);
+		
+		//Builds the format menu
+		formatMenu = new JMenu("Format");
+		menuBar.add(formatMenu);
 		
 		//Adds 'save' option
 		save = new JMenuItem("Save");
@@ -77,6 +87,23 @@ public class TextEditor extends JFrame{
 		selectAll.setActionCommand("selectAll");
 		selectAll.addActionListener(new MenuListener());
 		
+		//Adds font menu
+		fontMenu = new JMenu("Font");
+		formatMenu.add(fontMenu);
+		
+		//Adds font sizes
+		size12 = new JMenuItem("12");
+		fontMenu.add(size12);
+		size12.setActionCommand("size12");
+		size12.addActionListener(new MenuListener());
+		size14 = new JMenuItem("14");
+		fontMenu.add(size14);
+		size14.setActionCommand("size14");
+		size14.addActionListener(new MenuListener());
+		size16 = new JMenuItem("16");
+		fontMenu.add(size16);
+		size16.setActionCommand("size16");
+		size16.addActionListener(new MenuListener());
 	
 		pack();
 		setVisible(true);
@@ -128,6 +155,21 @@ public class TextEditor extends JFrame{
 			if (e.getActionCommand().equals("selectAll")) {
 				text.requestFocus();
 				text.select(0, text.getText().length());
+			}
+			
+			//Changes font size to 12
+			if (e.getActionCommand().equals("size12")) {
+				text.setFont(text.getFont().deriveFont(12f));
+			}
+			
+			//Changes font size to 14
+			if (e.getActionCommand().equals("size14")) {
+				text.setFont(text.getFont().deriveFont(14f));
+			}
+			
+			//Changes font size to 16
+			if (e.getActionCommand().equals("size16")) {
+				text.setFont(text.getFont().deriveFont(16f));
 			}
 		}
 	}
@@ -197,7 +239,7 @@ public class TextEditor extends JFrame{
 	public static void main(String[] args) {
 		
 		try {
-            		// Set System L&F
+            // Set System L&F
 			UIManager.setLookAndFeel(
 					UIManager.getSystemLookAndFeelClassName());
 			
