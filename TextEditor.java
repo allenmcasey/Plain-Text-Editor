@@ -1,3 +1,4 @@
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
@@ -9,6 +10,8 @@ public class TextEditor extends JFrame{
 	private static final long serialVersionUID = 1L;
 	JFrame window = new JFrame();
 	JTextArea text = new JTextArea(20, 50);
+	JScrollPane jsp = new JScrollPane(text, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 	private JPanel panel = new JPanel();
 	
 	//Save menu declarations
@@ -16,6 +19,7 @@ public class TextEditor extends JFrame{
 	JMenu fileMenu;
 	JMenu editMenu;
 	JMenu formatMenu;
+	JMenu sizeMenu;
 	JMenu fontMenu;
 	JMenuItem save;
 	JMenuItem saveAs;
@@ -25,6 +29,10 @@ public class TextEditor extends JFrame{
 	JMenuItem size12;
 	JMenuItem size14;
 	JMenuItem size16;
+	JMenuItem courierFont;
+	JMenuItem sansSerifFont;
+	JMenuItem comicSansFont;
+	JMenuItem arialFont;
 	
 	//Editor constructor
 	public TextEditor() {
@@ -33,7 +41,7 @@ public class TextEditor extends JFrame{
 		setTitle("Text Editor");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		text.setLineWrap(true);
-		panel.add(text);
+		panel.add(jsp);
 		add(panel);
 		
 		//Builds save menu
@@ -87,24 +95,42 @@ public class TextEditor extends JFrame{
 		selectAll.setActionCommand("selectAll");
 		selectAll.addActionListener(new MenuListener());
 		
-		//Adds font menu
-		fontMenu = new JMenu("Font");
-		formatMenu.add(fontMenu);
+		//Adds size menu
+		sizeMenu = new JMenu("Size");
+		formatMenu.add(sizeMenu);
 		
 		//Adds font sizes
 		size12 = new JMenuItem("12");
-		fontMenu.add(size12);
+		sizeMenu.add(size12);
 		size12.setActionCommand("size12");
 		size12.addActionListener(new MenuListener());
 		size14 = new JMenuItem("14");
-		fontMenu.add(size14);
+		sizeMenu.add(size14);
 		size14.setActionCommand("size14");
 		size14.addActionListener(new MenuListener());
 		size16 = new JMenuItem("16");
-		fontMenu.add(size16);
+		sizeMenu.add(size16);
 		size16.setActionCommand("size16");
 		size16.addActionListener(new MenuListener());
+		
+		fontMenu = new JMenu("Font");
+		formatMenu.add(fontMenu);
+		
+		courierFont = new JMenuItem("Courier");
+		fontMenu.add(courierFont);
+		courierFont.setActionCommand("Courier");
+		courierFont.addActionListener(new MenuListener());
+		
+		sansSerifFont = new JMenuItem("Sans Serif");
+		fontMenu.add(sansSerifFont);
+		sansSerifFont.setActionCommand("Sans Serif");
+		sansSerifFont.addActionListener(new MenuListener());
 	
+		arialFont = new JMenuItem("Arial");
+		fontMenu.add(arialFont);
+		arialFont.setActionCommand("Arial");
+		arialFont.addActionListener(new MenuListener());
+		
 		pack();
 		setVisible(true);
 		
@@ -170,6 +196,21 @@ public class TextEditor extends JFrame{
 			//Changes font size to 16
 			if (e.getActionCommand().equals("size16")) {
 				text.setFont(text.getFont().deriveFont(16f));
+			}
+			
+			if (e.getActionCommand().equals("Courier")) {
+				Font font = new Font("Courier", Font.PLAIN, 12);
+				text.setFont(font);
+			}
+			
+			if (e.getActionCommand().equals("Sans Serif")) {
+				Font font = new Font("SansSerif", Font.PLAIN, 12);
+				text.setFont(font);
+			}
+			
+			if (e.getActionCommand().equals("Arial")) {
+				Font font = new Font("Arial", Font.PLAIN, 12);
+				text.setFont(font);
 			}
 		}
 	}
