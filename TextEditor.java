@@ -45,37 +45,38 @@ public class TextEditor extends JFrame{
 		save = new JMenuItem("Save");
 		fileMenu.add(save);
 		save.setActionCommand("save");
-		save.addActionListener(new SaveListener());
+		save.addActionListener(new MenuListener());
 		
 		//Adds 'save as' option
 		saveAs = new JMenuItem("Save As");
 		fileMenu.add(saveAs);
 		saveAs.setActionCommand("saveAs");
-		saveAs.addActionListener(new SaveListener());
+		saveAs.addActionListener(new MenuListener());
 		
 		//Adds 'open' option
 		save = new JMenuItem("Open");
 		fileMenu.add(save);
 		save.setActionCommand("open");
-		save.addActionListener(new SaveListener());
+		save.addActionListener(new MenuListener());
 		
 		//Adds 'find' option
 		find = new JMenuItem("Find");
 		editMenu.add(find);
 		find.setActionCommand("find");
-		find.addActionListener(new SaveListener());
+		find.addActionListener(new MenuListener());
 		
 		//Adds 'replace' option
 		replace = new JMenuItem("Replace");
 		editMenu.add(replace);
 		replace.setActionCommand("replace");
-		replace.addActionListener(new SaveListener());
+		replace.addActionListener(new MenuListener());
 		
 		//Adds 'select all' option
 		selectAll = new JMenuItem("Select All");
 		editMenu.add(selectAll);
 		selectAll.setActionCommand("selectAll");
-		selectAll.addActionListener(new SaveListener());
+		selectAll.addActionListener(new MenuListener());
+		
 	
 		pack();
 		setVisible(true);
@@ -83,7 +84,7 @@ public class TextEditor extends JFrame{
 	}
 	
 	//Responds to clicks on save menu
-	private class SaveListener implements ActionListener {
+	private class MenuListener implements ActionListener {
 		
 		public void actionPerformed(ActionEvent e) {
 			
@@ -169,7 +170,7 @@ public class TextEditor extends JFrame{
 		}
 	}
 	
-	//Searches text for user inputted string and highlights if found
+	//Searches text for user inputed string and highlights if found
 	public void searchText(String searchString) {
 		
 		if (searchString != null) {
@@ -216,4 +217,5 @@ public class TextEditor extends JFrame{
 		
 		new TextEditor();
 	}
+
 }
