@@ -18,9 +18,7 @@ public class TextEditor extends JFrame{
 	JMenuItem save;
 	JMenuItem saveAs;
 	JMenuItem find;
-	
-	//Name that user wishes to save file as
-	String filename = null;
+	JMenuItem replace;
 	
 	//Editor constructor
 	public TextEditor() {
@@ -66,6 +64,11 @@ public class TextEditor extends JFrame{
 		find.setActionCommand("find");
 		find.addActionListener(new SaveListener());
 		
+		//Adds 'replace' option
+		replace = new JMenuItem("Replace");
+		editMenu.add(replace);
+		replace.setActionCommand("replace");
+		replace.addActionListener(new SaveListener());
 	
 		pack();
 		setVisible(true);
@@ -79,8 +82,6 @@ public class TextEditor extends JFrame{
 			
 			//Checks if a file has been created, then writes current text to file if so
 			if (e.getActionCommand().equals("save")) {
-				//if (filename == null)
-				//	filename = JOptionPane.showInputDialog("What would you like to name the file?");
 				try {
 					saveFile();
 				} catch (IOException e1) {
@@ -91,7 +92,6 @@ public class TextEditor extends JFrame{
 			
 			//Allows the user to create and name a file then save current text to it
 			if (e.getActionCommand().equals("saveAs")) {
-				//filename = JOptionPane.showInputDialog("What would you like to name the file?");
 				try {
 					saveFile();
 				} catch (IOException e1) {
@@ -109,6 +109,11 @@ public class TextEditor extends JFrame{
 			if (e.getActionCommand().equals("find")) {
 				String searchString = JOptionPane.showInputDialog("What would you like to search for?");
 				searchText(searchString);
+			}
+			
+			//Allows user to replace string with another string
+			if (e.getActionCommand().equals("replace")) {
+				replace();
 			}
 		}
 	}
@@ -166,6 +171,14 @@ public class TextEditor extends JFrame{
 		}
 	}
 	
+	//Method that allows user to replace string with another string
+	public void replace() {
+		String toBeReplaced = JOptionPane.showInputDialog("What would you like to replace?");
+		String toReplace = JOptionPane.showInputDialog("What would you like to replace it with?");
+		String result = text.getText().replaceAll(toBeReplaced, toReplace);
+		text.setText(result);
+	}
+	
 	//Main method that instantiates the editor
 	public static void main(String[] args) {
 		
@@ -190,5 +203,4 @@ public class TextEditor extends JFrame{
 		
 		new TextEditor();
 	}
-
 }
