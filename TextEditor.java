@@ -9,12 +9,12 @@ public class TextEditor extends JFrame{
 	//Text window declarations
 	private static final long serialVersionUID = 1L;
 	JFrame window = new JFrame();
-	JTextArea text = new JTextArea(20, 50);
+	JTextArea text = new JTextArea(20, 60);
 	JScrollPane jsp = new JScrollPane(text, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 	private JPanel panel = new JPanel();
 	
-	//Save menu declarations
+	//Menu declarations
 	JMenuBar menuBar;
 	JMenu fileMenu;
 	JMenu editMenu;
@@ -37,7 +37,7 @@ public class TextEditor extends JFrame{
 	//Editor constructor
 	public TextEditor() {
 		
-		//builds JPanel and adds to JFrame
+		//builds JPanel and JTextArea, adds them to JFrame
 		setTitle("Text Editor");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		text.setLineWrap(true);
@@ -48,6 +48,7 @@ public class TextEditor extends JFrame{
 		menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
+		//Adds file menu
 		fileMenu = new JMenu("File");
 		menuBar.add(fileMenu);
 		
@@ -113,19 +114,19 @@ public class TextEditor extends JFrame{
 		size16.setActionCommand("size16");
 		size16.addActionListener(new MenuListener());
 		
+		//Adds font menu
 		fontMenu = new JMenu("Font");
 		formatMenu.add(fontMenu);
 		
+		//Adds font type options
 		courierFont = new JMenuItem("Courier");
 		fontMenu.add(courierFont);
 		courierFont.setActionCommand("Courier");
 		courierFont.addActionListener(new MenuListener());
-		
 		sansSerifFont = new JMenuItem("Sans Serif");
 		fontMenu.add(sansSerifFont);
 		sansSerifFont.setActionCommand("Sans Serif");
 		sansSerifFont.addActionListener(new MenuListener());
-	
 		arialFont = new JMenuItem("Arial");
 		fontMenu.add(arialFont);
 		arialFont.setActionCommand("Arial");
@@ -146,7 +147,6 @@ public class TextEditor extends JFrame{
 				try {
 					saveFile();
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
@@ -198,16 +198,19 @@ public class TextEditor extends JFrame{
 				text.setFont(text.getFont().deriveFont(16f));
 			}
 			
+			//Sets font to Courier
 			if (e.getActionCommand().equals("Courier")) {
 				Font font = new Font("Courier", Font.PLAIN, 12);
 				text.setFont(font);
 			}
 			
+			//Sets font to Sans Serif
 			if (e.getActionCommand().equals("Sans Serif")) {
 				Font font = new Font("SansSerif", Font.PLAIN, 12);
 				text.setFont(font);
 			}
 			
+			//Sets font to Arial
 			if (e.getActionCommand().equals("Arial")) {
 				Font font = new Font("Arial", Font.PLAIN, 12);
 				text.setFont(font);
@@ -280,22 +283,18 @@ public class TextEditor extends JFrame{
 	public static void main(String[] args) {
 		
 		try {
-            // Set System L&F
+            		// Set System L&F
 			UIManager.setLookAndFeel(
 					UIManager.getSystemLookAndFeelClassName());
 			
     		} 
 		catch (UnsupportedLookAndFeelException e) {
-		       // handle exception
 		    }
 		    catch (ClassNotFoundException e) {
-		       // handle exception
 		    }
 		    catch (InstantiationException e) {
-		       // handle exception
 		    }
 		    catch (IllegalAccessException e) {
-		       // handle exception
 		    }
 		
 		new TextEditor();
