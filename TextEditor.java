@@ -4,10 +4,9 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import javax.swing.*;
 
-public class TextEditor extends JFrame{
+public class TextEditor{
 
 	//Text window declarations
-	private static final long serialVersionUID = 1L;
 	JFrame window = new JFrame();
 	JTextArea text = new JTextArea(20, 60);
 	boolean lineWrapped = true;
@@ -15,50 +14,46 @@ public class TextEditor extends JFrame{
             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 	private JPanel panel = new JPanel();
 	
+	//Search window declarations
+	private JFrame searchFrame = new JFrame();
+	private JPanel searchPanel = new JPanel();
+	JLabel searchWhat = new JLabel("What would you like to search for?");
+	JTextArea search = new JTextArea(1, 10);
+	
+	//Variables that store the current font, style, and text size
 	String fontName = "SansSerif";
 	char fontStyle = 'P';
 	int fontSize = 12;
 	
-	//Save menu declarations
-	JMenuBar menuBar;
-	JMenu fileMenu;
-	JMenu editMenu;
-	JMenu formatMenu;
-	JMenu sizeMenu;
-	JMenu fontMenu;
-	JMenu styleMenu;
-	JMenuItem save;
-	JMenuItem saveAs;
-	JMenuItem find;
-	JMenuItem replace;
-	JMenuItem selectAll;
-	JMenuItem lineWrap;
-	JMenuItem size12;
-	JMenuItem size14;
-	JMenuItem size16;
-	JMenuItem courierFont;
-	JMenuItem sansSerifFont;
-	JMenuItem comicSansFont;
-	JMenuItem arialFont;
-	JMenuItem plain;
-	JMenuItem bold;
-	JMenuItem italic;
+	//Variables used in searching the text
+	boolean firstSearch = true;
+	String searchString = null;
+	String textString = null;
+	int indexOfResult = -1;
+	int startSearch = 0;
+	
+	//Menu declarations
+	JMenuBar menuBar; 
+	JMenu fileMenu, editMenu, formatMenu, sizeMenu, fontMenu, styleMenu;
+	JMenuItem save, saveAs, find, replace, selectAll, lineWrap;
+	JMenuItem size12, size14, size16, courierFont, sansSerifFont, arialFont, plain, bold, italic;
 	
 	//Editor constructor
 	public TextEditor() {
 		
 		//builds JPanel and adds to JFrame
-		setTitle("Text Editor");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.setTitle("Text Editor");
+		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		panel.add(jsp);
-		add(panel);
+		window.add(panel);
 		Font font = new Font(fontName, Font.PLAIN, fontSize);
 		text.setFont(font);
 		
-		//Builds save menu
+		//Builds the save menu
 		menuBar = new JMenuBar();
-		setJMenuBar(menuBar);
+		window.setJMenuBar(menuBar);
 		
+		//Builds the file menu
 		fileMenu = new JMenu("File");
 		menuBar.add(fileMenu);
 		
@@ -175,10 +170,30 @@ public class TextEditor extends JFrame{
 		lineWrap.addActionListener(new MenuListener());
 				
 		text.setLineWrap(true);
-		pack();
-		setVisible(true);
+		window.pack();
+		window.setVisible(true);
+		
+		//Creates search window
+		searchFrame.add(searchPanel);
+		searchPanel.add(searchWhat);
+		searchPanel.add(search);
+		
+		JButton findNext = new JButton("Find");
+		findNext.setActionCommand("find next");
+		findNext.addActionListener(new MenuListener());
+		searchPanel.add(findNext);
+		
+		JButton cancel = new JButton("Cancel");
+		cancel.setActionCommand("cancel");
+		cancel.addActionListener(new MenuListener());
+		searchPanel.add(cancel);
+		
+		searchFrame.setTitle("Find");
+		searchFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		searchFrame.pack();
 		
 	}
+	
 	
 	//Responds to clicks on save menu
 	private class MenuListener implements ActionListener {
@@ -199,7 +214,6 @@ public class TextEditor extends JFrame{
 				try {
 					saveFile();
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
@@ -211,8 +225,28 @@ public class TextEditor extends JFrame{
 			
 			//Allows user to enter a string then uses searchText() to highlight it
 			if (e.getActionCommand().equals("find")) {
-				String searchString = JOptionPane.showInputDialog("What would you like to search for?");
-				searchText(searchString);
+				searchFrame.setVisible(true);
+				if (firstSearch) {
+					startSearch = 0;
+					textString = text.getText();
+				}
+			}
+			
+			//Finds next instance of search string in text area
+			if (e.getActionCommand().equals("find next")) {
+				
+				firstSearch = false;
+				searchString = search.getText();
+				searchText();
+				searchFrame.setVisible(true);
+		
+			}
+			
+			//Closes out search window
+			if (e.getActionCommand().equals("cancel")) {
+				firstSearch = true;
+				search.setText(null);
+				searchFrame.dispose();
 			}
 			
 			//Allows user to replace string with another string
@@ -329,7 +363,7 @@ public class TextEditor extends JFrame{
 	//Method that allows user to save current text
 	public void saveFile() throws IOException {
 		JFileChooser fileChooser = new JFileChooser();
-		int result = fileChooser.showSaveDialog(TextEditor.this);
+		int result = fileChooser.showSaveDialog(null);
 		if (result == JFileChooser.APPROVE_OPTION) {
 		  File file = fileChooser.getSelectedFile();
 		  FileWriter writer = new FileWriter(file);
@@ -365,17 +399,17 @@ public class TextEditor extends JFrame{
 	}
 	
 	//Searches text for user inputed string and highlights if found
-	public void searchText(String searchString) {
+	public void searchText() {
 		
 		if (searchString != null) {
-			String textString = text.getText();
-			int index = textString.indexOf(searchString);
-			if (index == -1)
+			indexOfResult = textString.indexOf(searchString, startSearch);
+			if (indexOfResult == -1)
 				JOptionPane.showMessageDialog(null, "String not found in text.");
 			else {
 				text.requestFocus();
-				text.select(index, index + searchString.length());
+				text.select(indexOfResult, indexOfResult + searchString.length());
 			}
+			startSearch = (indexOfResult + 1);
 		}
 	}
 	
