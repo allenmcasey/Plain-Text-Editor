@@ -10,22 +10,29 @@ public class TextEditor extends JFrame{
 	private static final long serialVersionUID = 1L;
 	JFrame window = new JFrame();
 	JTextArea text = new JTextArea(20, 60);
+	boolean lineWrapped = true;
 	JScrollPane jsp = new JScrollPane(text, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 	private JPanel panel = new JPanel();
 	
-	//Menu declarations
+	String fontName = "SansSerif";
+	char fontStyle = 'P';
+	int fontSize = 12;
+	
+	//Save menu declarations
 	JMenuBar menuBar;
 	JMenu fileMenu;
 	JMenu editMenu;
 	JMenu formatMenu;
 	JMenu sizeMenu;
 	JMenu fontMenu;
+	JMenu styleMenu;
 	JMenuItem save;
 	JMenuItem saveAs;
 	JMenuItem find;
 	JMenuItem replace;
 	JMenuItem selectAll;
+	JMenuItem lineWrap;
 	JMenuItem size12;
 	JMenuItem size14;
 	JMenuItem size16;
@@ -33,22 +40,25 @@ public class TextEditor extends JFrame{
 	JMenuItem sansSerifFont;
 	JMenuItem comicSansFont;
 	JMenuItem arialFont;
+	JMenuItem plain;
+	JMenuItem bold;
+	JMenuItem italic;
 	
 	//Editor constructor
 	public TextEditor() {
 		
-		//builds JPanel and JTextArea, adds them to JFrame
+		//builds JPanel and adds to JFrame
 		setTitle("Text Editor");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		text.setLineWrap(true);
 		panel.add(jsp);
 		add(panel);
+		Font font = new Font(fontName, Font.PLAIN, fontSize);
+		text.setFont(font);
 		
 		//Builds save menu
 		menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
-		//Adds file menu
 		fileMenu = new JMenu("File");
 		menuBar.add(fileMenu);
 		
@@ -118,20 +128,53 @@ public class TextEditor extends JFrame{
 		fontMenu = new JMenu("Font");
 		formatMenu.add(fontMenu);
 		
-		//Adds font type options
+		//Adds courier font
 		courierFont = new JMenuItem("Courier");
 		fontMenu.add(courierFont);
 		courierFont.setActionCommand("Courier");
 		courierFont.addActionListener(new MenuListener());
+		
+		//Adds sans serif font
 		sansSerifFont = new JMenuItem("Sans Serif");
 		fontMenu.add(sansSerifFont);
 		sansSerifFont.setActionCommand("Sans Serif");
 		sansSerifFont.addActionListener(new MenuListener());
+	
+		//Adds arial font
 		arialFont = new JMenuItem("Arial");
 		fontMenu.add(arialFont);
 		arialFont.setActionCommand("Arial");
 		arialFont.addActionListener(new MenuListener());
 		
+		//Adds style menu
+		styleMenu = new JMenu("Style");
+		formatMenu.add(styleMenu);
+		
+		//Adds plain style
+		plain = new JMenuItem("Plain");
+		styleMenu.add(plain);
+		plain.setActionCommand("Plain");
+		plain.addActionListener(new MenuListener());
+		
+		//Adds bold style
+		bold = new JMenuItem("Bold");
+		styleMenu.add(bold);
+		bold.setActionCommand("Bold");
+		bold.addActionListener(new MenuListener());
+		
+		//Adds italic style
+		italic = new JMenuItem("Italic");
+		styleMenu.add(italic);
+		italic.setActionCommand("Italic");
+		italic.addActionListener(new MenuListener());
+		
+		//Adds line wrap
+		lineWrap = new JMenuItem("Line Wrap");
+		formatMenu.add(lineWrap);
+		lineWrap.setActionCommand("Line Wrap");
+		lineWrap.addActionListener(new MenuListener());
+				
+		text.setLineWrap(true);
 		pack();
 		setVisible(true);
 		
@@ -161,7 +204,7 @@ public class TextEditor extends JFrame{
 				}
 			}
 			
-			//Allows user to open and edit existing .txt files
+			//Allows user to open and edit existing text files
 			if (e.getActionCommand().equals("open")) {
 				openFile();
 			}
@@ -183,36 +226,101 @@ public class TextEditor extends JFrame{
 				text.select(0, text.getText().length());
 			}
 			
+			//Allows user to toggle line wrap
+			if (e.getActionCommand().equals("Line Wrap")) {
+				if (lineWrapped) {
+					lineWrapped = false;
+				}
+				else {
+					lineWrapped = true;
+				}
+				text.setLineWrap(lineWrapped);
+			}
+			
 			//Changes font size to 12
 			if (e.getActionCommand().equals("size12")) {
 				text.setFont(text.getFont().deriveFont(12f));
+				fontSize = 12;
 			}
 			
 			//Changes font size to 14
 			if (e.getActionCommand().equals("size14")) {
 				text.setFont(text.getFont().deriveFont(14f));
+				fontSize = 14;
 			}
 			
 			//Changes font size to 16
 			if (e.getActionCommand().equals("size16")) {
 				text.setFont(text.getFont().deriveFont(16f));
+				fontSize = 16;
 			}
 			
-			//Sets font to Courier
+			//Listener that changes font to courier
 			if (e.getActionCommand().equals("Courier")) {
-				Font font = new Font("Courier", Font.PLAIN, 12);
-				text.setFont(font);
+				fontName = "Courier";
+				switch (fontStyle) {
+				case 'P':	Font font = new Font(fontName, Font.PLAIN, fontSize);
+							text.setFont(font);
+							break;
+				case 'B':	font = new Font(fontName, Font.BOLD, fontSize);
+							text.setFont(font);
+							break;
+				case 'I': 	font = new Font(fontName, Font.ITALIC, fontSize);
+							text.setFont(font);
+							break;
+				}
 			}
 			
-			//Sets font to Sans Serif
+			//Listener that changes font to sans serif
 			if (e.getActionCommand().equals("Sans Serif")) {
-				Font font = new Font("SansSerif", Font.PLAIN, 12);
+				fontName = "SansSerif";
+				switch (fontStyle) {
+				case 'P':	Font font = new Font(fontName, Font.PLAIN, fontSize);
+							text.setFont(font);
+							break;
+				case 'B':	font = new Font(fontName, Font.BOLD, fontSize);
+							text.setFont(font);
+							break;
+				case 'I': 	font = new Font(fontName, Font.ITALIC, fontSize);
+							text.setFont(font);
+							break;
+				}
+			}
+			
+			//Listener that changes font to arial
+			if (e.getActionCommand().equals("Arial")) {
+				fontName = "Arial";
+				switch (fontStyle) {
+					case 'P':	Font font = new Font(fontName, Font.PLAIN, fontSize);
+								text.setFont(font);
+								break;
+					case 'B':	font = new Font(fontName, Font.BOLD, fontSize);
+								text.setFont(font);
+								break;
+					case 'I': 	font = new Font(fontName, Font.ITALIC, fontSize);
+								text.setFont(font);
+								break;
+				}
+			}
+			
+			//Listener that changes style to bold
+			if (e.getActionCommand().equals("Bold")) {
+				fontStyle = 'B';
+				Font font = new Font(fontName, Font.BOLD, fontSize);
 				text.setFont(font);
 			}
 			
-			//Sets font to Arial
-			if (e.getActionCommand().equals("Arial")) {
-				Font font = new Font("Arial", Font.PLAIN, 12);
+			//Listener that changes style to plain
+			if (e.getActionCommand().equals("Plain")) {
+				fontStyle = 'P';
+				Font font = new Font(fontName, Font.PLAIN, fontSize);
+				text.setFont(font);
+			}
+			
+			//Listener that changes style to italic
+			if (e.getActionCommand().equals("Italic")) {
+				fontStyle = 'I';
+				Font font = new Font(fontName, Font.ITALIC, fontSize);
 				text.setFont(font);
 			}
 		}
@@ -299,5 +407,4 @@ public class TextEditor extends JFrame{
 		
 		new TextEditor();
 	}
-
 }
