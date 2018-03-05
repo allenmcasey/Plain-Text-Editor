@@ -19,6 +19,7 @@ public class TextEditor{
 	private JPanel searchPanel = new JPanel();
 	JLabel searchWhat = new JLabel("What would you like to search for?");
 	JTextArea search = new JTextArea(1, 10);
+	boolean matchingCase = true;
 	
 	//Variables that store the current font, style, and text size
 	String fontName = "SansSerif";
@@ -37,6 +38,7 @@ public class TextEditor{
 	JMenu fileMenu, editMenu, formatMenu, sizeMenu, fontMenu, styleMenu;
 	JMenuItem save, saveAs, find, replace, selectAll, lineWrap;
 	JMenuItem size12, size14, size16, courierFont, sansSerifFont, arialFont, plain, bold, italic;
+	JCheckBox matchCase;
 	
 	//Editor constructor
 	public TextEditor() {
@@ -188,6 +190,12 @@ public class TextEditor{
 		cancel.addActionListener(new MenuListener());
 		searchPanel.add(cancel);
 		
+		matchCase = new JCheckBox("Match Case");
+		matchCase.setSelected(true);
+		matchCase.setActionCommand("match case");
+		matchCase.addActionListener(new MenuListener());
+		searchPanel.add(matchCase);
+		
 		searchFrame.setTitle("Find");
 		searchFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		searchFrame.pack();
@@ -234,7 +242,7 @@ public class TextEditor{
 			
 			//Finds next instance of search string in text area
 			if (e.getActionCommand().equals("find next")) {
-				
+				textString = text.getText();
 				firstSearch = false;
 				searchString = search.getText();
 				searchText();
@@ -247,6 +255,11 @@ public class TextEditor{
 				firstSearch = true;
 				search.setText(null);
 				searchFrame.dispose();
+			}
+			
+			//Allows user to toggle the match case option
+			if (e.getActionCommand().equals("match case")) {
+				matchingCase = !matchingCase;
 			}
 			
 			//Allows user to replace string with another string
@@ -402,6 +415,11 @@ public class TextEditor{
 	public void searchText() {
 		
 		if (searchString != null) {
+			//if ignoring case, bring everything to lowercase
+			if (!matchingCase) {
+				textString = textString.toLowerCase();
+				searchString = searchString.toLowerCase();
+			}
 			indexOfResult = textString.indexOf(searchString, startSearch);
 			if (indexOfResult == -1)
 				JOptionPane.showMessageDialog(null, "String not found in text.");
