@@ -1,8 +1,11 @@
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 import javax.swing.*;
+import javax.swing.border.Border;
 
 public class TextEditor{
 
@@ -18,7 +21,8 @@ public class TextEditor{
 	private JFrame searchFrame = new JFrame();
 	private JPanel searchPanel = new JPanel();
 	JLabel searchWhat = new JLabel("What would you like to search for?");
-	JTextArea search = new JTextArea(1, 10);
+	JTextArea search = new JTextArea(1, 15);
+	Border border = BorderFactory.createLineBorder(Color.BLACK);
 	boolean matchingCase = true;
 	
 	//Variables that store the current font, style, and text size
@@ -177,27 +181,31 @@ public class TextEditor{
 		
 		//Creates search window
 		searchFrame.add(searchPanel);
-		searchPanel.add(searchWhat);
-		searchPanel.add(search);
+		searchFrame.setTitle("Find");
+		searchFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		JButton findNext = new JButton("Find");
+		JButton findNext = new JButton("Find Next");
 		findNext.setActionCommand("find next");
 		findNext.addActionListener(new MenuListener());
-		searchPanel.add(findNext);
 		
 		JButton cancel = new JButton("Cancel");
 		cancel.setActionCommand("cancel");
 		cancel.addActionListener(new MenuListener());
-		searchPanel.add(cancel);
 		
 		matchCase = new JCheckBox("Match Case");
 		matchCase.setSelected(true);
 		matchCase.setActionCommand("match case");
 		matchCase.addActionListener(new MenuListener());
-		searchPanel.add(matchCase);
 		
-		searchFrame.setTitle("Find");
-		searchFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//Styles the search window GUI
+		searchPanel.setLayout(new BorderLayout());
+		search.setBorder(border);
+		searchPanel.add(searchWhat, BorderLayout.NORTH);
+		searchPanel.add(search, BorderLayout.WEST);
+		searchPanel.add(findNext, BorderLayout.CENTER);
+		searchPanel.add(cancel, BorderLayout.EAST);
+		searchPanel.add(matchCase, BorderLayout.SOUTH);
+		
 		searchFrame.pack();
 		
 	}
@@ -422,7 +430,7 @@ public class TextEditor{
 			}
 			indexOfResult = textString.indexOf(searchString, startSearch);
 			if (indexOfResult == -1)
-				JOptionPane.showMessageDialog(null, "String not found in text.");
+				JOptionPane.showMessageDialog(null, search.getText() + " not found in text.");
 			else {
 				text.requestFocus();
 				text.select(indexOfResult, indexOfResult + searchString.length());
@@ -444,9 +452,7 @@ public class TextEditor{
 		
 		try {
             		// Set System L&F
-			UIManager.setLookAndFeel(
-					UIManager.getSystemLookAndFeelClassName());
-			
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
     		} 
 		catch (UnsupportedLookAndFeelException e) {
 		    }
