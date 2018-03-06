@@ -40,7 +40,7 @@ public class TextEditor{
 	//Menu declarations
 	JMenuBar menuBar; 
 	JMenu fileMenu, editMenu, formatMenu, sizeMenu, fontMenu, styleMenu;
-	JMenuItem save, saveAs, find, replace, selectAll, lineWrap;
+	JMenuItem save, saveAs, find, replace, selectAll, lineWrap, wordCount;
 	JMenuItem size12, size14, size16, courierFont, sansSerifFont, arialFont, plain, bold, italic;
 	JCheckBox matchCase;
 	
@@ -78,25 +78,25 @@ public class TextEditor{
 		save.addActionListener(new MenuListener());
 		
 		//Adds 'save as' option
-		saveAs = new JMenuItem("Save As");
+		saveAs = new JMenuItem("Save As...");
 		fileMenu.add(saveAs);
 		saveAs.setActionCommand("saveAs");
 		saveAs.addActionListener(new MenuListener());
 		
 		//Adds 'open' option
-		save = new JMenuItem("Open");
+		save = new JMenuItem("Open...");
 		fileMenu.add(save);
 		save.setActionCommand("open");
 		save.addActionListener(new MenuListener());
 		
 		//Adds 'find' option
-		find = new JMenuItem("Find");
+		find = new JMenuItem("Find...");
 		editMenu.add(find);
 		find.setActionCommand("find");
 		find.addActionListener(new MenuListener());
 		
 		//Adds 'replace' option
-		replace = new JMenuItem("Replace");
+		replace = new JMenuItem("Replace...");
 		editMenu.add(replace);
 		replace.setActionCommand("replace");
 		replace.addActionListener(new MenuListener());
@@ -106,6 +106,12 @@ public class TextEditor{
 		editMenu.add(selectAll);
 		selectAll.setActionCommand("selectAll");
 		selectAll.addActionListener(new MenuListener());
+		
+		//Adds word count button
+		wordCount = new JMenuItem("Word Count");
+		editMenu.add(wordCount);
+		wordCount.setActionCommand("word count");
+		wordCount.addActionListener(new MenuListener());
 		
 		//Adds size menu
 		sizeMenu = new JMenu("Size");
@@ -281,6 +287,29 @@ public class TextEditor{
 				text.select(0, text.getText().length());
 			}
 			
+			if (e.getActionCommand().equals("word count")) {
+				char[] textArray = text.getText().toCharArray();
+				boolean inWord = false;
+				int words = 0;
+				for (int i = 0; i < textArray.length; i++) {
+					if (textArray[i] == ' ') {
+						if(inWord) {
+							inWord = false;
+						}
+					}
+					else {
+						if(!inWord) {
+							inWord = true;
+							words++;
+						}
+					}	
+				}
+				if (textArray.length == 0)
+					JOptionPane.showMessageDialog(null, "The text is blank.");
+				else
+					JOptionPane.showMessageDialog(null, "There are " + words + " words.");
+			}
+			
 			//Allows user to toggle line wrap
 			if (e.getActionCommand().equals("Line Wrap")) {
 				if (lineWrapped) {
@@ -452,7 +481,9 @@ public class TextEditor{
 		
 		try {
             		// Set System L&F
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			UIManager.setLookAndFeel(
+					UIManager.getSystemLookAndFeelClassName());
+			
     		} 
 		catch (UnsupportedLookAndFeelException e) {
 		    }
