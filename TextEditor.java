@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 public class TextEditor{
 
@@ -37,16 +39,20 @@ public class TextEditor{
 	int indexOfResult = -1;
 	int startSearch = 0;
 	
+	//Change log strings used for undo
+	String[] previousState = {"", null};
+	
 	//Menu declarations
 	JMenuBar menuBar; 
 	JMenu fileMenu, editMenu, formatMenu, sizeMenu, fontMenu, styleMenu;
-	JMenuItem save, saveAs, find, replace, selectAll, lineWrap, wordCount;
+	JMenuItem newDoc, save, saveAs, find, replace, selectAll, undo, lineWrap, wordCount;
 	JMenuItem size12, size14, size16, courierFont, sansSerifFont, arialFont, plain, bold, italic;
 	JCheckBox matchCase;
 	
 	//Editor constructor
 	public TextEditor() {
 		
+		text.getDocument().addDocumentListener(new MyDocumentListener());
 		//builds JPanel and adds to JFrame
 		window.setTitle("Text Editor");
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -70,6 +76,12 @@ public class TextEditor{
 		//Builds the format menu
 		formatMenu = new JMenu("Format");
 		menuBar.add(formatMenu);
+		
+		//Adds 'new' option
+		newDoc = new JMenuItem("New...");
+		fileMenu.add(newDoc);
+		newDoc.setActionCommand("new");
+		newDoc.addActionListener(new MenuListener());
 		
 		//Adds 'save' option
 		save = new JMenuItem("Save");
@@ -106,6 +118,12 @@ public class TextEditor{
 		editMenu.add(selectAll);
 		selectAll.setActionCommand("selectAll");
 		selectAll.addActionListener(new MenuListener());
+		
+		//Adds undo item
+		undo = new JMenuItem("Undo/Redo");
+		editMenu.add(undo);
+		undo.setActionCommand("undo");
+		undo.addActionListener(new MenuListener());
 		
 		//Adds word count button
 		wordCount = new JMenuItem("Word Count");
@@ -216,11 +234,50 @@ public class TextEditor{
 		
 	}
 	
+	//Once it fills up, each element is moved to the side to account for the new element
+	private class MyDocumentListener implements DocumentListener{
+
+		public void insertUpdate(DocumentEvent e) {
+			if(previousState[1] == null){
+				previousState[1] = text.getText();
+			}
+			else {
+				previousState[0] = previousState[1];
+				previousState[1] = text.getText();
+			}
+			
+		}
+
+		public void removeUpdate(DocumentEvent arg0) {
+			if(previousState[1] == null){
+				previousState[1] = text.getText();
+			}
+			else {
+				previousState[0] = previousState[1];
+				previousState[1] = text.getText();
+			}
+		}
+		
+		public void changedUpdate(DocumentEvent e) {
+			
+		}
+		
+	}
 	
 	//Responds to clicks on save menu
 	private class MenuListener implements ActionListener {
 		
 		public void actionPerformed(ActionEvent e) {
+			
+			if (e.getActionCommand().equals("new")) {
+				JOptionPane.showMessageDialog(null, "Save the file first!");
+				try {
+					saveFile();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				text.setText("");
+			}
 			
 			//Checks if a file has been created, then writes current text to file if so
 			if (e.getActionCommand().equals("save")) {
@@ -287,11 +344,23 @@ public class TextEditor{
 				text.select(0, text.getText().length());
 			}
 			
+			
+			//Toggles between undo and redo
+			if (e.getActionCommand().equals("undo")) {
+				String temp0 = previousState[0];
+				String temp1 = previousState[1];
+				text.setText(previousState[0]);
+				previousState[0] = temp1;
+				previousState[1] = temp0;
+			}
+			
+			//Displays the amount of words in the editor
 			if (e.getActionCommand().equals("word count")) {
 				char[] textArray = text.getText().toCharArray();
 				boolean inWord = false;
 				int words = 0;
 				for (int i = 0; i < textArray.length; i++) {
+					
 					if (textArray[i] == ' ') {
 						if(inWord) {
 							inWord = false;
@@ -312,12 +381,7 @@ public class TextEditor{
 			
 			//Allows user to toggle line wrap
 			if (e.getActionCommand().equals("Line Wrap")) {
-				if (lineWrapped) {
-					lineWrapped = false;
-				}
-				else {
-					lineWrapped = true;
-				}
+				lineWrapped = !lineWrapped;
 				text.setLineWrap(lineWrapped);
 			}
 			
@@ -481,8 +545,7 @@ public class TextEditor{
 		
 		try {
             		// Set System L&F
-			UIManager.setLookAndFeel(
-					UIManager.getSystemLookAndFeelClassName());
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 			
     		} 
 		catch (UnsupportedLookAndFeelException e) {
