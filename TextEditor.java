@@ -1,8 +1,5 @@
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+import java.awt.*;
 import java.io.*;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -13,7 +10,7 @@ public class TextEditor{
 
 	//Text window declarations
 	JFrame window = new JFrame();
-	JTextArea text = new JTextArea(20, 60);
+	JTextArea text = new JTextArea(25, 60);
 	boolean lineWrapped = true;
 	JScrollPane jsp = new JScrollPane(text, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -54,7 +51,7 @@ public class TextEditor{
 		
 		text.getDocument().addDocumentListener(new MyDocumentListener());
 		//builds JPanel and adds to JFrame
-		window.setTitle("Text Editor");
+		window.setTitle("NoteBeans");
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		panel.add(jsp);
 		window.add(panel);
@@ -165,10 +162,10 @@ public class TextEditor{
 		sansSerifFont.setActionCommand("Sans Serif");
 		sansSerifFont.addActionListener(new MenuListener());
 	
-		//Adds arial font
-		arialFont = new JMenuItem("Arial");
+		//Adds calibri font
+		arialFont = new JMenuItem("Calibri");
 		fontMenu.add(arialFont);
-		arialFont.setActionCommand("Arial");
+		arialFont.setActionCommand("Calibri");
 		arialFont.addActionListener(new MenuListener());
 		
 		//Adds style menu
@@ -406,49 +403,19 @@ public class TextEditor{
 			//Listener that changes font to courier
 			if (e.getActionCommand().equals("Courier")) {
 				fontName = "Courier";
-				switch (fontStyle) {
-				case 'P':	Font font = new Font(fontName, Font.PLAIN, fontSize);
-							text.setFont(font);
-							break;
-				case 'B':	font = new Font(fontName, Font.BOLD, fontSize);
-							text.setFont(font);
-							break;
-				case 'I': 	font = new Font(fontName, Font.ITALIC, fontSize);
-							text.setFont(font);
-							break;
-				}
+				keepFont();
 			}
 			
 			//Listener that changes font to sans serif
 			if (e.getActionCommand().equals("Sans Serif")) {
 				fontName = "SansSerif";
-				switch (fontStyle) {
-				case 'P':	Font font = new Font(fontName, Font.PLAIN, fontSize);
-							text.setFont(font);
-							break;
-				case 'B':	font = new Font(fontName, Font.BOLD, fontSize);
-							text.setFont(font);
-							break;
-				case 'I': 	font = new Font(fontName, Font.ITALIC, fontSize);
-							text.setFont(font);
-							break;
-				}
+				keepFont();
 			}
 			
 			//Listener that changes font to arial
-			if (e.getActionCommand().equals("Arial")) {
-				fontName = "Arial";
-				switch (fontStyle) {
-					case 'P':	Font font = new Font(fontName, Font.PLAIN, fontSize);
-								text.setFont(font);
-								break;
-					case 'B':	font = new Font(fontName, Font.BOLD, fontSize);
-								text.setFont(font);
-								break;
-					case 'I': 	font = new Font(fontName, Font.ITALIC, fontSize);
-								text.setFont(font);
-								break;
-				}
+			if (e.getActionCommand().equals("Calibri")) {
+				fontName = "Calibri";
+				keepFont();
 			}
 			
 			//Listener that changes style to bold
@@ -532,6 +499,21 @@ public class TextEditor{
 		}
 	}
 	
+	//Keeps font as current font as style and size are changed by user
+	public void keepFont() {
+		switch (fontStyle) {
+		case 'P':	Font font = new Font(fontName, Font.PLAIN, fontSize);
+					text.setFont(font);
+					break;
+		case 'B':	font = new Font(fontName, Font.BOLD, fontSize);
+					text.setFont(font);
+					break;
+		case 'I': 	font = new Font(fontName, Font.ITALIC, fontSize);
+					text.setFont(font);
+					break;
+		}
+	}
+	
 	//Method that allows user to replace string with another string
 	public void replace() {
 		String toBeReplaced = JOptionPane.showInputDialog("What would you like to replace?");
@@ -544,8 +526,8 @@ public class TextEditor{
 	public static void main(String[] args) {
 		
 		try {
-            		// Set System L&F
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            			// Set System L&F
+				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 			
     		} 
 		catch (UnsupportedLookAndFeelException e) {
