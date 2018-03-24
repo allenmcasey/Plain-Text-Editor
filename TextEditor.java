@@ -1,6 +1,9 @@
+package texteditor;
+
 import java.awt.event.*;
 import java.awt.*;
 import java.io.*;
+import java.util.*;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
@@ -13,7 +16,7 @@ public class TextEditor{
 	JTextArea text = new JTextArea(25, 60);
 	boolean lineWrapped = true;
 	JScrollPane jsp = new JScrollPane(text, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+            					ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 	private JPanel panel = new JPanel();
 	
 	//Search window declarations
@@ -42,7 +45,7 @@ public class TextEditor{
 	//Menu declarations
 	JMenuBar menuBar; 
 	JMenu fileMenu, editMenu, formatMenu, sizeMenu, fontMenu, styleMenu;
-	JMenuItem newDoc, save, saveAs, find, replace, selectAll, undo, lineWrap, wordCount;
+	JMenuItem newDoc, save, saveAs, find, replace, selectAll, undo, lineWrap, wordCount, commonWord;
 	JMenuItem size12, size14, size16, courierFont, sansSerifFont, arialFont, plain, bold, italic;
 	JCheckBox matchCase;
 	
@@ -50,7 +53,6 @@ public class TextEditor{
 	public TextEditor() {
 		
 		text.getDocument().addDocumentListener(new MyDocumentListener());
-		//builds JPanel and adds to JFrame
 		window.setTitle("NoteBeans");
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		panel.add(jsp);
@@ -127,6 +129,12 @@ public class TextEditor{
 		editMenu.add(wordCount);
 		wordCount.setActionCommand("word count");
 		wordCount.addActionListener(new MenuListener());
+		
+		//Adds most common word button
+		commonWord = new JMenuItem("Most common word...");
+		editMenu.add(commonWord);
+		commonWord.setActionCommand("count");
+		commonWord.addActionListener(new MenuListener());
 		
 		//Adds size menu
 		sizeMenu = new JMenu("Size");
@@ -374,6 +382,38 @@ public class TextEditor{
 					JOptionPane.showMessageDialog(null, "The text is blank.");
 				else
 					JOptionPane.showMessageDialog(null, "There are " + words + " words.");
+			}
+			
+			//Displays the most common word to the user
+			if(e.getActionCommand().equals("count")) {
+				String[] words = text.getText().split(" ");	//Convert text to String array
+				Map<String, Integer> wordCount = new HashMap<String, Integer>();
+				
+				//Place String array into appropriate elements of HashMap
+				for (String a : words) {
+					if(wordCount.containsKey(a))
+						wordCount.put(a, wordCount.get(a) + 1);
+					else
+						wordCount.put(a,  1);
+				}
+				
+				String element = null;		//Holds most frequent word
+				int frequency = 0;		//Holds frequency of most frequent word
+				
+				Set<java.util.Map.Entry<String, Integer>> entrySet = wordCount.entrySet();
+				
+				//Iterates over HashMap and determines the most frequent word
+				for (java.util.Map.Entry<String, Integer> entry : entrySet) 
+				{
+				        if(entry.getValue() > frequency)
+				        {
+				                element = entry.getKey();
+				                frequency = entry.getValue();
+				        }
+				}
+				//Display most frequent word
+				JOptionPane.showMessageDialog(null, "The most common word is \"" + element
+									+ "\".\nIt appears " + frequency + " times.");
 			}
 			
 			//Allows user to toggle line wrap
