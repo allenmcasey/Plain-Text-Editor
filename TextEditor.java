@@ -14,7 +14,6 @@ public class TextEditor{
 	//Text window declarations
 	JFrame window = new JFrame();
 	JTextArea text = new JTextArea(25, 60);
-	boolean lineWrapped = true;
 	JScrollPane jsp = new JScrollPane(text, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
             					ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 	private JPanel panel = new JPanel();
@@ -422,8 +421,7 @@ public class TextEditor{
 			
 			//Allows user to toggle line wrap
 			if (e.getActionCommand().equals("Line Wrap")) {
-				lineWrapped = !lineWrapped;
-				text.setLineWrap(lineWrapped);
+				text.setLineWrap(!(text.getLineWrap()));
 			}
 			
 			//Changes font size to 12
