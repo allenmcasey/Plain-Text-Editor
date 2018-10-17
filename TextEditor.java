@@ -388,34 +388,8 @@ public class TextEditor{
 				if (text.getText().toCharArray().length == 0)
 					JOptionPane.showMessageDialog(null, "The text is blank.");
 				else {
-					String[] words = text.getText().split(" ");	//Convert text to String array
-					Map<String, Integer> wordCount = new HashMap<String, Integer>();
-
-					//Place String array into appropriate elements of HashMap
-					for (String a : words) {
-						if(wordCount.containsKey(a))
-							wordCount.put(a, wordCount.get(a) + 1);
-						else
-							wordCount.put(a,  1);
-					}
-
-					String element = null;		//Holds most frequent word
-					int frequency = 0;		//Holds frequency of most frequent word
-
-					Set<java.util.Map.Entry<String, Integer>> entrySet = wordCount.entrySet();
-
-					//Iterates over HashMap and determines the most frequent word
-					for (java.util.Map.Entry<String, Integer> entry : entrySet) 
-					{
-						if(entry.getValue() > frequency)
-						{
-							element = entry.getKey();
-							frequency = entry.getValue();
-						}
-					}
 					//Display most frequent word
-					JOptionPane.showMessageDialog(null, "The most common word is \"" + element
-										+ "\".\nIt appears " + frequency + " times.");
+					JOptionPane.showMessageDialog(null, mostCommonWord());
 				}
 			}
 			
@@ -539,6 +513,34 @@ public class TextEditor{
 			}
 			startSearch = (indexOfResult + 1);
 		}
+	}
+	
+	public String mostCommonWord() {
+		String[] words = text.getText().split(" ");	//Convert text to String array
+		Map<String, Integer> wordCount = new HashMap<String, Integer>();
+
+		//Place String array into appropriate elements of HashMap
+		for (String a : words) {
+			if(wordCount.containsKey(a))
+				wordCount.put(a, wordCount.get(a) + 1);
+			else
+				wordCount.put(a,  1);
+		}
+
+		String element = null;		//Holds most frequent word
+		int frequency = 0;		//Holds frequency of most frequent word
+
+		Set<java.util.Map.Entry<String, Integer>> entrySet = wordCount.entrySet();
+
+		//Iterates over HashMap and determines the most frequent word
+		for (java.util.Map.Entry<String, Integer> entry : entrySet) {
+			if(entry.getValue() > frequency) {
+				element = entry.getKey();
+				frequency = entry.getValue();
+			}
+		}
+		String result = "The most common word is \"" + element + "\".\nIt appears " + frequency + " times.");
+		return result;		
 	}
 	
 	//Keeps font as current font as style and size are changed by user
