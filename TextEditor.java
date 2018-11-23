@@ -524,8 +524,8 @@ public class TextEditor{
 		
 		//Place String array into appropriate elements of HashMap
 		for (String word : wordsArray) {
-			if (!word.equals("") && !word.equals(" ")) {
-				word = word.replaceAll("[^a-zA-Z]", "").toLowerCase();	
+			word = word.replaceAll("[^a-zA-Z]", "").toLowerCase();
+			if (!word.equals("") && !word.equals(" ")) {	
 				if(wordCount.containsKey(word))						
 					wordCount.put(word, wordCount.get(word) + 1);
 				else
