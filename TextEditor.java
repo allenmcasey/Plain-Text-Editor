@@ -1,5 +1,3 @@
-package texteditor;
-
 import java.awt.event.*;
 import java.awt.*;
 import java.io.*;
@@ -14,6 +12,7 @@ public class TextEditor{
 	//Text window declarations
 	JFrame window = new JFrame();
 	JTextArea text = new JTextArea(25, 60);
+	boolean lineWrapped = true;
 	JScrollPane jsp = new JScrollPane(text, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
             					ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 	private JPanel panel = new JPanel();
@@ -360,42 +359,22 @@ public class TextEditor{
 			
 			//Displays the amount of words in the editor
 			if (e.getActionCommand().equals("word count")) {
-				char[] textArray = text.getText().toCharArray();
-				boolean inWord = false;
-				int words = 0;
-				for (int i = 0; i < textArray.length; i++) {
-					
-					if (textArray[i] == ' ') {
-						if(inWord) {
-							inWord = false;
-						}
-					}
-					else {
-						if(!inWord) {
-							inWord = true;
-							words++;
-						}
-					}	
-				}
-				if (textArray.length == 0)
-					JOptionPane.showMessageDialog(null, "The text is blank.");
-				else
-					JOptionPane.showMessageDialog(null, "There are " + words + " words.");
+				printWordCount();
 			}
 			
 			//Displays the most common word to the user
 			if(e.getActionCommand().equals("count")) {
 				if (text.getText().toCharArray().length == 0)
 					JOptionPane.showMessageDialog(null, "The text is blank.");
-				else {
-					//Display most frequent word
-					JOptionPane.showMessageDialog(null, mostCommonWord());
-				}
+				else 
+					printMostCommon();
+
 			}
 			
 			//Allows user to toggle line wrap
 			if (e.getActionCommand().equals("Line Wrap")) {
-				text.setLineWrap(!(text.getLineWrap()));
+				lineWrapped = !lineWrapped;
+				text.setLineWrap(lineWrapped);
 			}
 			
 			//Changes font size to 12
@@ -515,34 +494,6 @@ public class TextEditor{
 		}
 	}
 	
-	public String mostCommonWord() {
-		String[] words = text.getText().split(" ");	//Convert text to String array
-		Map<String, Integer> wordCount = new HashMap<String, Integer>();
-
-		//Place String array into appropriate elements of HashMap
-		for (String a : words) {
-			if(wordCount.containsKey(a))
-				wordCount.put(a, wordCount.get(a) + 1);
-			else
-				wordCount.put(a,  1);
-		}
-
-		String element = null;		//Holds most frequent word
-		int frequency = 0;		//Holds frequency of most frequent word
-
-		Set<java.util.Map.Entry<String, Integer>> entrySet = wordCount.entrySet();
-
-		//Iterates over HashMap and determines the most frequent word
-		for (java.util.Map.Entry<String, Integer> entry : entrySet) {
-			if(entry.getValue() > frequency) {
-				element = entry.getKey();
-				frequency = entry.getValue();
-			}
-		}
-		String result = "The most common word is \"" + element + "\".\nIt appears " + frequency + " times.");
-		return result;		
-	}
-	
 	//Keeps font as current font as style and size are changed by user
 	public void keepFont() {
 		switch (fontStyle) {
@@ -566,12 +517,72 @@ public class TextEditor{
 		text.setText(result);
 	}
 	
+	public void printMostCommon() {
+		
+		String[] wordsArray = text.getText().split(" ");	//Convert text to String array
+		Map<String, Integer> wordCount = new HashMap<String, Integer>();
+		
+		//Place String array into appropriate elements of HashMap
+		for (String word : wordsArray) {
+			if (!word.equals("") && !word.equals(" ")) {
+				word = word.replaceAll("[^a-zA-Z]", "").toLowerCase();	
+				if(wordCount.containsKey(word))						
+					wordCount.put(word, wordCount.get(word) + 1);
+				else
+					wordCount.put(word, 1);
+			}
+		}
+		
+		String element = null;		//Holds most frequent word
+		int frequency = 0;		//Holds frequency of most frequent word
+		
+		Set<java.util.Map.Entry<String, Integer>> entrySet = wordCount.entrySet();
+		
+		//Iterates over HashMap and determines the most frequent word
+		for (java.util.Map.Entry<String, Integer> entry : entrySet) 
+		{
+		        if(entry.getValue() > frequency)
+		        {
+		                element = entry.getKey();
+		                frequency = entry.getValue();
+		        }
+		}
+		
+		//Display most frequent word
+		JOptionPane.showMessageDialog(null, "The most common word is \"" + element
+							+ "\".\nIt appears " + frequency + " times.");
+	}
+	
+	public void printWordCount() {
+		char[] textArray = text.getText().toCharArray();
+		boolean inWord = false;
+		int words = 0;
+		for (int i = 0; i < textArray.length; i++) {
+			if (textArray[i] == ' ') {
+				if(inWord) {
+					inWord = false;
+				}
+			}
+			else {
+				if(!inWord) {
+					inWord = true;
+					words++;
+				}
+			}	
+		}
+		if (textArray.length == 0)
+			JOptionPane.showMessageDialog(null, "The text is blank.");
+		else
+			JOptionPane.showMessageDialog(null, "There are " + words + " words.");
+	}
+	
+	
 	//Main method that instantiates the editor
 	public static void main(String[] args) {
 		
 		try {
-            			// Set System L&F
-				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            		// Set System L&F
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 			
     		} 
 		catch (UnsupportedLookAndFeelException e) {
